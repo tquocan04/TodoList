@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using ToDoList.Models;
+using ToDoList.Repositories;
 using ToDoList.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,6 +12,9 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("ToDoListContext"
 
 // layer Service
 builder.Services.AddScoped<IListService, ListService>();
+
+// layer Repository
+builder.Services.AddScoped<IListRepository, ListRepository>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

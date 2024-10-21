@@ -37,8 +37,8 @@ namespace ToDoList.Controllers
         [HttpPost]
         public async Task<ActionResult<List>> CreateList(List item)
         {
-            var createdItem = await _listService.CreateListItemAsync(item);
-            return CreatedAtAction(nameof(GetList), new { id = createdItem.Id }, createdItem);
+            await _listService.CreateListItemAsync(item);
+            return CreatedAtAction(nameof(GetList), new { id = item.Id }, item);
         }
 
         [HttpPut("{id}")]
@@ -59,6 +59,5 @@ namespace ToDoList.Controllers
             await _listService.DeleteListItemAsync(id);
             return NoContent();
         }
-
     }
 }

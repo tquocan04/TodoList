@@ -1,45 +1,38 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ToDoList.Models;
+using ToDoList.Repositories;
 
 namespace ToDoList.Services
 {
     public class ListService : IListService
     {
-        private readonly ListContext _dbContext;
-        public ListService(ListContext dbContext)
+        private readonly IListRepository _listRepository;
+        public ListService(IListRepository listRepository)
         {
-            _dbContext = dbContext;
+            _listRepository = listRepository;
         }
 
         public async Task<IEnumerable<List>> GetListItemsAsync()
         {
-            return await _dbContext.lists.ToListAsync();
+            return await _listRepository.GetAllAsync();
         }
         public async Task<List?> GetListItemByIdAsync(int id)
         {
-            return await _dbContext.lists.FindAsync(id);
+            return await _listRepository.GetByIdAsync(id);
         }
-        public async Task<List> CreateListItemAsync(List item)
+        public async Task CreateListItemAsync(List item)
         {
-            _dbContext.lists.Add(item);
-            await _dbContext.SaveChangesAsync();
-            return item;
+            await _listRepository.AddAsync(item);
         }
 
         public async Task UpdateListItemAsync(List item)
         {
-            _dbContext.Entry(item).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync();
+            await _listRepository.UpdateAsync(item);
         }
 
         public async Task DeleteListItemAsync(int id)
         {
-            var item = await _dbContext.lists.FindAsync(id);
-            if (item != null)
-            {
-                _dbContext.lists.Remove(item);
-                await _dbContext.SaveChangesAsync();
-            }
+            await _listRepository.DeleteAsync(id);
         }
     }
 }

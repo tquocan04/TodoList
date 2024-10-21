@@ -5,7 +5,7 @@ namespace ToDoList.Services
     {
         Task<IEnumerable<List>> GetListItemsAsync();
         Task<List?> GetListItemByIdAsync(int id);
-        Task<List> CreateListItemAsync(List list);
+        Task CreateListItemAsync(List list);
         Task UpdateListItemAsync(List list);
         Task DeleteListItemAsync(int id);
     }
