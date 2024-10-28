@@ -1,20 +1,17 @@
+using Datas;
 using Microsoft.EntityFrameworkCore;
-using ToDoList.Models;
-using ToDoList.Repositories;
-using ToDoList.Services;
+using ToDoList.Extensions;
+
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddDbContext<ListContext>(options =>
-options.UseSqlServer(builder.Configuration.GetConnectionString("ToDoListContext")));
+builder.Services.AddDbContext<Context>(options =>
+options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")));
 
-// layer Service
-builder.Services.AddScoped<IListService, ListService>();
-
-// layer Repository
-builder.Services.AddScoped<IListRepository, ListRepository>();
+builder.Services.AddServices();
+builder.Services.AddRepositories();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
