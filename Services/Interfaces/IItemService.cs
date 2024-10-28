@@ -1,4 +1,5 @@
 ﻿using Datas.DTOs;
+using Datas.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,9 +11,9 @@ namespace Services.Interfaces
     public interface IItemService
     {
         Task<IEnumerable<ItemDTO>> GetAllItemsAsync();
-        Task<ItemDTO> GetItemAsync(int id);
+        Task<ItemDTO?> GetItemAsync(int id);
         Task CreateNewItem(ItemDTO itemDTO);
         Task DeleteItemAsync(int Id);
-        Task UpdateItemAsync(ItemDTO itemDTO);
+        Task<bool> UpdateItemAsync(int id, ItemDTO item);
     }
 }

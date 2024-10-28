@@ -3,6 +3,7 @@ using Datas;
 using Datas.DTOs;
 using Datas.Entities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -15,17 +16,14 @@ namespace Repositories.Repositories
     public class ItemRepository : IItemRepository
     {
         private readonly Context _context;
-        private readonly IMapper _mapper;
-        public ItemRepository(Context context, IMapper mapper)
+        public ItemRepository(Context context)
         {
             _context = context;
-            _mapper = mapper;
         }
 
-        public async Task CreateNewItem(ItemDTO itemDTO)
+        public async Task CreateNewItem(Item item)
         {
-            var newItem = _mapper.Map<Item>(itemDTO);
-            await _context.Items.AddAsync(newItem);
+            await _context.Items.AddAsync(item);
             await _context.SaveChangesAsync();
         }
 
@@ -39,23 +37,21 @@ namespace Repositories.Repositories
             }
         }
 
-        public async Task<IEnumerable<ItemDTO>> GetAllItemsAsync()
+        public async Task<IEnumerable<Item>> GetAllItemsAsync()
         {
-            var items = await _context.Items.ToListAsync();
-            return  _mapper.Map<IEnumerable<ItemDTO>>(items);
+            return await _context.Items.ToListAsync();
         }
 
-        public async Task UpdateItemAsync(ItemDTO itemDTO)
+        public async Task UpdateItemAsync(Item item)
         {
-            var item = _mapper.Map<Item>(itemDTO);
+            Console.WriteLine($"REPO: {item.Id}");
             _context.Items.Update(item);
             await _context.SaveChangesAsync();
         }
 
-        public async Task<ItemDTO> GetItemById(int id)
+        public async Task<Item?> GetItemById(int id)
         {
-            var item = await _context.Items.FindAsync(id);
-            return _mapper.Map<ItemDTO>(item);
+            return await _context.Items.FindAsync(id);
         }
     }
 }

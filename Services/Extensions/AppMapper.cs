@@ -7,13 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Repositories.Extensions
+namespace Services.Extensions
 {
     public class AppMapper : Profile
     {
-        public AppMapper() 
+        public AppMapper()
         {
             CreateMap<Item, ItemDTO>().ReverseMap();
         }
+
     }
 }

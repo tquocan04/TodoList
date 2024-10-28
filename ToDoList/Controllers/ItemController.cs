@@ -43,14 +43,9 @@ namespace ToDoList.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateList(int id, ItemDTO itemDTO)
         {
-            var item = await _itemService.GetItemAsync(id);
-            if (item != null)
+            var result = await _itemService.UpdateItemAsync(id, itemDTO);
+            if (result)
             {
-                Console.WriteLine($"hello {itemDTO}");
-                item.Name = itemDTO.Name;
-                item.isDone = itemDTO.isDone;
-                //await _itemService.UpdateItemAsync(item);
-
                 return NoContent();
             }
 
