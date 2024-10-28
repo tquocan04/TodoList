@@ -36,27 +36,38 @@ namespace ToDoList.Controllers
         public async Task<ActionResult<ItemDTO>> CreateNewItem(ItemDTO itemDTO)
         {
             await _itemService.CreateNewItem(itemDTO);
-            return CreatedAtAction(nameof(GetItemById), itemDTO);
+            var item = _mapper.Map<Item>(itemDTO);
+            return CreatedAtAction(nameof(GetItemById), new { id = item .Id}, itemDTO);
         }
 
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateList(int id, ItemDTO itemDTO)
         {
-            var item = _mapper.Map<Item>(itemDTO);
-            if (id != item.Id)
+            var item = await _itemService.GetItemAsync(id);
+            if (item != null)
             {
-                return BadRequest();
+                Console.WriteLine($"hello {itemDTO}");
+                item.Name = itemDTO.Name;
+                item.isDone = itemDTO.isDone;
+                //await _itemService.UpdateItemAsync(item);
+
+                return NoContent();
             }
 
-            await _itemService.UpdateItemAsync(itemDTO);
-            return NoContent();
+            return NotFound();
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteList(int id)
         {
-            await _itemService.DeleteItemAsync(id);
-            return NoContent();
+            var item = await _itemService.GetItemAsync(id);
+            if (item != null)
+            {
+                await _itemService.DeleteItemAsync(id);
+                return NoContent();
+            }
+            
+            return NotFound(id);
         }
     }
 }
