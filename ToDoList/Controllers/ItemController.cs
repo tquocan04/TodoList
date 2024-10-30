@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Datas.DTOs;
 using Datas.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
 
@@ -33,6 +34,7 @@ namespace ToDoList.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<ItemDTO>> CreateNewItem(ItemDTO itemDTO)
         {
             await _itemService.CreateNewItem(itemDTO);

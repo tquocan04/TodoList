@@ -25,12 +25,13 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters
+        options.TokenValidationParameters = new TokenValidationParameters   //tham so xac thuc cho jwt
         {
             //cap token: true-> dich vu, false->tu cap
             ValidateIssuer = true,
             ValidateAudience = true,
-            ValidateLifetime = true,
+
+            ValidateLifetime = true,    //xac thuc thoi gian ton tai cua token
 
             //ky vao token
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])),
