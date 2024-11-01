@@ -1,9 +1,10 @@
-﻿using Datas.DTOs;
+﻿using AutoMapper;
+using Datas.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Services.Interfaces;
-using TodoItem.Services;
+using TodoItem.Models;
 
 namespace TodoItem.Controllers
 {
@@ -11,23 +12,30 @@ namespace TodoItem.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly JwtService _jwtService;
+        private readonly ITokenService _tokenService;
         private readonly ILoginService _loginService;
 
-        public LoginController(JwtService jwtService, ILoginService loginService)
+        public LoginController(ITokenService tokenService, ILoginService loginService)
         {
-            _jwtService = jwtService;
+            _tokenService = tokenService;
             _loginService = loginService;
         }
         [HttpPost]
         public async Task<ActionResult> Login(UserDTO userDTO)
         {
-            bool check = _loginService.IsLoggedIn(userDTO.UserName, userDTO.Password);
-            if (!check)
+            var user = await _loginService.IsLoggedIn(userDTO);
+            if (user == null)
             {
-                return BadRequest();
+                return BadRequest("Invalid user");
             }
-            return Ok("Bearer " + _jwtService.GenerateToken(userDTO));
+            var accessToken = _tokenService.GenerateToken(userDTO);
+            
+
+            return Ok(new AuthResponse
+            {
+                Token = accessToken,
+                RefreshToken = user.RefreshToken
+            });
         }
 
     }

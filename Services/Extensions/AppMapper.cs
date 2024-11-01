@@ -1,11 +1,6 @@
 ﻿using AutoMapper;
 using Datas.DTOs;
 using Datas.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Services.Extensions
 {
@@ -14,6 +9,7 @@ namespace Services.Extensions
         public AppMapper()
         {
             CreateMap<Item, ItemDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
         }
 
     }

@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Datas.DTOs;
 
 namespace Services.Interfaces
 {
     public interface ILoginService
     {
-        public bool IsLoggedIn(string username, string password);
+        Task<UserDTO> IsLoggedIn(UserDTO userDTO);
+        Task<UserDTO> FindByUsername(string username);
     }
 }

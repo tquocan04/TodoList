@@ -5,7 +5,6 @@ using Repositories.Repositories;
 using Services.Interfaces;
 using Services.Services;
 using System.Text;
-using TodoItem.Services;
 
 namespace ToDoList.Extensions
 {
@@ -15,7 +14,7 @@ namespace ToDoList.Extensions
         {
             services.AddScoped<IItemService, ItemService>();
             services.AddScoped<ILoginService, LoginService>();
-            services.AddScoped<JwtService>();
+            services.AddScoped<ITokenService, TokenService>();
 
             return services;
         }
@@ -29,19 +28,17 @@ namespace ToDoList.Extensions
         public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
         {
             var jwtSetting = configuration.GetSection("Jwt");
-            var secretKey = jwtSetting["Secret"];
             services.AddAuthentication(option =>
             {
                 option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                //option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-               .AddJwtBearer(options =>
+            }) .AddJwtBearer(options =>
                {
                     options.TokenValidationParameters = new TokenValidationParameters   //tham so xac thuc cho jwt
                     {
                         //cap token: true-> dich vu, false->tu cap
                         ValidateIssuer = true,
                         ValidIssuer = jwtSetting["Issuer"],
+
                         ValidateAudience = true,
                         ValidAudience = jwtSetting["Audience"],
 
@@ -49,7 +46,7 @@ namespace ToDoList.Extensions
                         ValidateLifetime = true,    //xac thuc thoi gian ton tai cua token
 
                         //ky vao token
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSetting["Secret"])),
                         ValidateIssuerSigningKey = true
                     };
                });

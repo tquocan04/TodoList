@@ -18,9 +18,21 @@ namespace Repositories.Repositories
             _context = context;
         }
 
+        public async Task<User> FindUser(string username)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username);
+        }
+
         public async Task<User?> GetUserByUsernameAndPassword(string username, string password)
         {
             return await _context.Users.FirstOrDefaultAsync(u => u.UserName == username && u.Password == password);
+        }
+
+        public async Task UpdateUser(User user)
+        {
+            Console.WriteLine("USERRR REPOOOO: ", user);
+            _context.Users.Update(user);
+            await _context.SaveChangesAsync();
         }
     }
 }

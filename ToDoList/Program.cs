@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TodoItem.Models;
 using ToDoList.Extensions;
 
 
@@ -16,6 +17,7 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")))
 builder.Services.AddServices();
 builder.Services.AddRepositories();
 builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.ConfigureJWT(builder.Configuration);
 
 builder.Services.AddControllers();

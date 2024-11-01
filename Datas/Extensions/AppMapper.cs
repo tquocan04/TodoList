@@ -15,6 +15,7 @@ namespace Datas.Extensions
         public AppMapper() 
         {
             CreateMap<Item, ItemDTO>().ReverseMap();
+            CreateMap<User, UserDTO>().ReverseMap();
         }
     }
 }
