@@ -19,7 +19,7 @@ namespace TodoItem.Controllers
             _jwtService = jwtService;
             _loginService = loginService;
         }
-        [HttpPost("/login")]
+        [HttpPost]
         public async Task<ActionResult> Login(UserDTO userDTO)
         {
             bool check = _loginService.IsLoggedIn(userDTO.UserName, userDTO.Password);
@@ -27,7 +27,7 @@ namespace TodoItem.Controllers
             {
                 return BadRequest();
             }
-            return Ok(_jwtService.GenerateToken(userDTO));
+            return Ok("Bearer " + _jwtService.GenerateToken(userDTO));
         }
 
     }

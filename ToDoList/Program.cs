@@ -16,28 +16,22 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DBConnection")))
 builder.Services.AddServices();
 builder.Services.AddRepositories();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.ConfigureJWT(builder.Configuration);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-    .AddJwtBearer(options =>
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
     {
-        options.TokenValidationParameters = new TokenValidationParameters   //tham so xac thuc cho jwt
-        {
-            //cap token: true-> dich vu, false->tu cap
-            ValidateIssuer = true,
-            ValidateAudience = true,
-
-            ValidateLifetime = true,    //xac thuc thoi gian ton tai cua token
-
-            //ky vao token
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])),
-            ValidateIssuerSigningKey = true
-        };
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader();
     });
+});
+
 
 var app = builder.Build();
 
@@ -47,7 +41,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.UseCors("AllowAll");
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

@@ -1,7 +1,10 @@
-﻿using Repositories.Interfaces;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using Repositories.Interfaces;
 using Repositories.Repositories;
 using Services.Interfaces;
 using Services.Services;
+using System.Text;
 using TodoItem.Services;
 
 namespace ToDoList.Extensions
@@ -22,6 +25,34 @@ namespace ToDoList.Extensions
             services.AddScoped<ILoginRepository, LoginRepository>();
 
             return services;
+        }
+        public static void ConfigureJWT(this IServiceCollection services, IConfiguration configuration)
+        {
+            var jwtSetting = configuration.GetSection("Jwt");
+            var secretKey = jwtSetting["Secret"];
+            services.AddAuthentication(option =>
+            {
+                option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                //option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+               .AddJwtBearer(options =>
+               {
+                    options.TokenValidationParameters = new TokenValidationParameters   //tham so xac thuc cho jwt
+                    {
+                        //cap token: true-> dich vu, false->tu cap
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtSetting["Issuer"],
+                        ValidateAudience = true,
+                        ValidAudience = jwtSetting["Audience"],
+
+                        ClockSkew = TimeSpan.Zero, // bo tg chenh lech
+                        ValidateLifetime = true,    //xac thuc thoi gian ton tai cua token
+
+                        //ky vao token
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey)),
+                        ValidateIssuerSigningKey = true
+                    };
+               });
         }
     }
 }
