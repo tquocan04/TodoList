@@ -97,10 +97,9 @@ namespace Services.Services
             var newRefreshToken = GenerateRefreshToken();
 
             // Cập nhật refresh token trong cơ sở dữ liệu
-            userDTO.RefreshToken = newRefreshToken;
-            userDTO.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(2); // Cấu hình thời gian sống cho refresh token
-            _mapper.Map(userDTO, user);
-
+            user.RefreshToken = newRefreshToken;
+            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMinutes(2); // Cấu hình thời gian sống cho refresh token
+            
             await _loginRepository.UpdateUser(user);
 
             return (newAccessToken, newRefreshToken);
